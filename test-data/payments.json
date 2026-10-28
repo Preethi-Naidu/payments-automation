@@ -1,0 +1,75 @@
+
+[
+  {
+    "id": "SEPA_001",
+    "description": "Valid SEPA EUR payment",
+    "scheme": "SEPA",
+    "amount": "125.50",
+    "currency": "EUR",
+    "endToEndId": "E2E-SEPA-001",
+    "debtorAccount": "TEST-DEBTOR-001",
+    "creditorAccount": "TEST-CREDITOR-001",
+    "expectedStatusCode": 201,
+    "expectedPaymentStatus": "ACCEPTED"
+  },
+  {
+    "id": "SEPA_002",
+    "description": "Reject zero-value payment",
+    "scheme": "SEPA",
+    "amount": "0.00",
+    "currency": "EUR",
+    "endToEndId": "E2E-SEPA-002",
+    "debtorAccount": "TEST-DEBTOR-001",
+    "creditorAccount": "TEST-CREDITOR-001",
+    "expectedStatusCode": 400,
+    "expectedError": "INVALID_AMOUNT"
+  },
+  {
+    "id": "SEPA_003",
+    "description": "Reject unsupported currency for SEPA",
+    "scheme": "SEPA",
+    "amount": "100.00",
+    "currency": "USD",
+    "endToEndId": "E2E-SEPA-003",
+    "debtorAccount": "TEST-DEBTOR-001",
+    "creditorAccount": "TEST-CREDITOR-001",
+    "expectedStatusCode": 400,
+    "expectedError": "UNSUPPORTED_CURRENCY"
+  },
+  {
+    "id": "BACS_001",
+    "description": "Valid Bacs GBP payment",
+    "scheme": "BACS",
+    "amount": "250.00",
+    "currency": "GBP",
+    "endToEndId": "E2E-BACS-001",
+    "debtorAccount": "TEST-DEBTOR-002",
+    "creditorAccount": "TEST-CREDITOR-002",
+    "expectedStatusCode": 201,
+    "expectedPaymentStatus": "ACCEPTED"
+  },
+  {
+    "id": "SWIFT_001",
+    "description": "Valid illustrative cross-border payment",
+    "scheme": "SWIFT",
+    "amount": "500.00",
+    "currency": "USD",
+    "endToEndId": "E2E-SWIFT-001",
+    "debtorAccount": "TEST-DEBTOR-003",
+    "creditorAccount": "TEST-CREDITOR-003",
+    "expectedStatusCode": 201,
+    "expectedPaymentStatus": "ACCEPTED"
+  },
+  {
+    "id": "SWIFT_002",
+    "description": "Reject negative payment amount",
+    "scheme": "SWIFT",
+    "amount": "-50.00",
+    "currency": "USD",
+    "endToEndId": "E2E-SWIFT-002",
+    "debtorAccount": "TEST-DEBTOR-003",
+    "creditorAccount": "TEST-CREDITOR-003",
+    "expectedStatusCode": 400,
+    "expectedError": "INVALID_AMOUNT"
+  }
+]
