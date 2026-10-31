@@ -1,0 +1,165 @@
+
+openapi: 3.0.3
+
+info:
+  title: Payment Processing API
+  version: 1.0.0
+  description: API contract for creating SEPA, Bacs and SWIFT payments.
+
+servers:
+  - url: http://localhost:3000
+    description: Local mock payment API
+
+paths:
+  /payments:
+    post:
+      summary: Create a payment
+      operationId: createPayment
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequest'
+
+      responses:
+        '201':
+          description: Payment successfully accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+
+        '400':
+          description: Invalid payment request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+
+    PaymentRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - scheme
+        - amount
+        - currency
+        - endToEndId
+        - debtorAccount
+        - creditorAccount
+
+      properties:
+        scheme:
+          type: string
+          enum:
+            - SEPA
+            - BACS
+            - SWIFT
+
+        amount:
+          type: string
+          pattern: '^-?[0-9]+(\.[0-9]{1,2})?$'
+          example: "125.50"
+
+        currency:
+          type: string
+          pattern: '^[A-Z]{3}$'
+          example: EUR
+
+        endToEndId:
+          type: string
+          maxLength: 35
+          example: E2E-SEPA-001
+
+        debtorAccount:
+          type: string
+          minLength: 1
+          example: TEST-DEBTOR-001
+
+        creditorAccount:
+          type: string
+          minLength: 1
+          example: TEST-CREDITOR-001
+
+        executionDate:
+          type: string
+          format: date
+          description: Optional requested execution date.
+          example: "2026-11-02"
+
+    PaymentResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - amount
+        - currency
+        - method
+        - status
+        - createdAt
+        - updatedAt
+
+      properties:
+        id:
+          type: string
+          example: PAY-123456
+
+        amount:
+          type: string
+          example: "125.50"
+
+        currency:
+          type: string
+          example: EUR
+
+        method:
+          type: string
+          enum:
+            - SEPA
+            - BACS
+            - SWIFT
+
+        status:
+          type: string
+          enum:
+            - ACCEPTED
+
+        createdAt:
+          type: string
+          format: date-time
+
+        updatedAt:
+          type: string
+          format: date-time
+
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - error
+
+      properties:
+        error:
+          type: object
+          additionalProperties: false
+          required:
+            - code
+
+          properties:
+            code:
+              type: string
+              enum:
+                - INVALID_REQUEST
+                - INVALID_AMOUNT
+                - UNSUPPORTED_CURRENCY
+                - INTERNAL_ERROR

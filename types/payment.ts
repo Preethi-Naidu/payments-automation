@@ -22,7 +22,7 @@ export interface PaymentApiResponse {
   id: string;
   amount: string;
   currency: string;
-  method: PaymentScheme;
+  method: string;
   status: string;
   createdAt: string;
   updatedAt: string;
